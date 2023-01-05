@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
 export default class Start extends React.Component {
   constructor(props) {
@@ -8,7 +8,7 @@ export default class Start extends React.Component {
   }
   render() {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.container}>
         <Text>App Title!</Text>
         <TextInput
           style={{ height: 40, margin: 1, borderColor: 'grey', borderWidth: 1 }}
@@ -22,3 +22,11 @@ export default class Start extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
