@@ -20,6 +20,7 @@ export default class Chat extends React.Component {
         {
           _id: 1,
           text: 'Hey developer',
+          // Add a timestamp
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -31,6 +32,7 @@ export default class Chat extends React.Component {
           _id: 2,
           text: 'This is a system message',
           createdAt: new Date(),
+          // Define message as system message
           system: true,
         },
       ],
@@ -43,11 +45,12 @@ export default class Chat extends React.Component {
     }))
   }
 
-  // Define the color of message bubbles 
+  // Define style of message bubbles 
   renderBubble(props) {
     return (
       <Bubble
         {...props}
+        // Set message bubble colour
         wrapperStyle={{
           left: {
             backgroundColor: '#fff'
@@ -56,11 +59,13 @@ export default class Chat extends React.Component {
             backgroundColor: '#dcf8c6'
           },
         }}
+        // Set text colour
         textStyle={{
           right: {
             color: '#000'
           }
         }}
+        // Set Timestamp text colour
         timeTextStyle={{
           right: {
             color: '#000'
