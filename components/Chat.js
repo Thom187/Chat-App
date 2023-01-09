@@ -86,6 +86,9 @@ export default class Chat extends React.Component {
           user={{
             _id: 1,
           }}
+          accessible={true}
+          accessibilityLabel='Text message input field'
+          accessibilityHint='You can type your message in here. Once ready you can send your message by pressing the button on the right.'
         />
         {
           Platform.OS === 'android' ? <KeyboardAvoidingView behavior='height' /> : null
