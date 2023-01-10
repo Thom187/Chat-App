@@ -38,7 +38,7 @@ export default class Chat extends React.Component {
       messages: [
         {
           _id: 2,
-          text: 'You have entered the chat',
+          text: `${name} has entered the chat`,
           createdAt: new Date(),
           // Define message as system message
           system: true,
