@@ -65,6 +65,11 @@ export default class Chat extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    this.unsubscribe();
+    this.authUnsubscribe();
+  }
+
   addMessage = () => {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
@@ -129,7 +134,7 @@ export default class Chat extends React.Component {
         user: {
           _id: data.user._id,
           name: data.user.name,
-          avatar: data.user.avatar || ''
+          avatar: data.user.avatar
         },
       });
     });
