@@ -33,20 +33,9 @@ export default class Chat extends React.Component {
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
 
-    // set messages state with a static message to see UI elements
+
     this.setState({
       messages: [
-        {
-          _id: 1,
-          text: 'Hey developer',
-          // Add a timestamp
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
         {
           _id: 2,
           text: 'You have entered the chat',
