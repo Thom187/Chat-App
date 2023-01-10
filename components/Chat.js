@@ -33,6 +33,18 @@ export default class Chat extends React.Component {
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
 
+    this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        firebase.auth().signInAnonymously();
+      }
+      this.setState({
+        uid: user.uid,
+        messages: [],
+      });
+      this.unsubscribe = this.referenceChatMessages
+        .orderBy('createdAt', 'desc')
+        .onSnapshot(this.onCollectionUpdate);
+    });
 
     this.setState({
       messages: [
@@ -40,7 +52,7 @@ export default class Chat extends React.Component {
           _id: 2,
           text: `${name} has entered the chat`,
           createdAt: new Date(),
-          // Define message as system message
+          // Defines message as system message
           system: true,
         },
       ],
@@ -92,7 +104,7 @@ export default class Chat extends React.Component {
       messages.push({
         _id: data._id,
         text: data.text,
-        createdAt: data.cratedAt.toDate(),
+        createdAt: data.createdAt.toDate(),
         user: {
           _id: data.user._id,
           name: data.user.name,
