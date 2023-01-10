@@ -94,6 +94,28 @@ export default class Chat extends React.Component {
     )
   }
 
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
+    // Go through each document
+    querySnapshot.forEach((doc) => {
+      // Get the QUeryDocumentSnapshot's data
+      let data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.cratedAt.toDate(),
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar || ''
+        },
+      });
+    });
+    this.setState({
+      messages,
+    });
+  }
+
   render() {
     let color = this.props.route.params.color;
     return (
