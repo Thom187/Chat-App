@@ -44,7 +44,7 @@ export default class Chat extends React.Component {
         firebase.auth().signInAnonymously();
       }
       this.setState({
-        uid: user.uid,
+        uid: user?.uid,
         messages: [],
       });
       this.unsubscribe = this.referenceChatMessages
