@@ -18,7 +18,8 @@ export default class Chat extends React.Component {
         _id: '',
         avatar: '',
         name: ''
-      }
+      },
+      isConnected: false
     }
 
     // Firebase configuration to connect to Firestore
@@ -69,43 +70,49 @@ export default class Chat extends React.Component {
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
 
-    // Check connection status and use Firebase 
+    this.getMessages();
+
+    // Check connection status - When online use Firebase to authenticate and load messages 
     NetInfo.fetch().then(connection => {
       if (connection.isConnected) {
         this.setState({
           isConnected: true
         });
         console.log('online');
-        // Create a reference to 'messages' collection in firebase
-        this.referenceChatMessages = firebase.firestore().collection('messages');
-
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-          if (!user) {
-            firebase.auth().signInAnonymously();
-          }
-          this.setState({
-            uid: user?.uid,
-            messages: [],
-          });
-          this.unsubscribe = this.referenceChatMessages
-            .orderBy('createdAt', 'desc')
-            .onSnapshot(this.onCollectionUpdate);
-          this.saveMessages();
-        });
-
       } else {
         this.setState({
           isConnected: false
         });
         console.log('offline');
-        this.getMessages();
       }
+    });
+    // Create a reference to 'messages' collection in firebase
+    this.referenceChatMessages = firebase.firestore().collection('messages');
+
+    this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        firebase.auth().signInAnonymously();
+      }
+      this.setState({
+        uid: user?.uid,
+        messages: [],
+        user: {
+          _id: user.uid,
+          name: name,
+          avatar: "https://placeimg.com/140/140/any",
+        },
+      });
+      this.unsubscribe = this.referenceChatMessages
+        .orderBy('createdAt', 'desc')
+        .onSnapshot(this.onCollectionUpdate);
     });
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
-    this.authUnsubscribe();
+    if (this.isConnected) {
+      this.unsubscribe();
+      this.authUnsubscribe();
+    }
   }
 
   addMessage = () => {
@@ -161,6 +168,7 @@ export default class Chat extends React.Component {
   }
 
   onCollectionUpdate = (querySnapshot) => {
+    if (!this.state.isConnected) return;
     const messages = [];
     // Go through each document
     querySnapshot.forEach((doc) => {
