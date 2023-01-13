@@ -80,12 +80,10 @@ export default class Chat extends React.Component {
         this.setState({
           isConnected: true
         });
-        console.log('online');
       } else {
         this.setState({
           isConnected: false
         });
-        console.log('offline');
       }
     });
     // Create a reference to 'messages' collection in firebase
