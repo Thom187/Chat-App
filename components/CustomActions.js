@@ -13,7 +13,7 @@ export default class CustomActions extends React.Component {
 
   // User can pick an image from the devices library
   imagePicker = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     try {
       if (status === 'granted') {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -53,7 +53,7 @@ export default class CustomActions extends React.Component {
 
   // Get User's GPS location
   getLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    const { status } = await Location.requestForegroundPermissionsAsync();
     if (status === 'granted') {
       const result = await Location.getCurrentPositionAsync({}).catch((error) =>
         console.log(error)
