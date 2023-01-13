@@ -30,6 +30,26 @@ export default class CustomActions extends React.Component {
     }
   };
 
+  // User can use their devices camera to take photos
+  takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    try {
+      if (status === 'granted') {
+        const result = await ImagePicker.launchCameraAsync({
+          mediaTypes:
+            ImagePicker.MediaTypeOptions.Images,
+        }).catch((error) => console.log(error));
+
+        if (!result.canceled) {
+          const imageUrl = await this.uploadImageFetch(result.assets[0].uri);
+          this.props.onSend({ image: imageUrl });
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   // Upload images to firebase
   uploadImageFetch = async (uri) => {
     const blob = await new Promise((resolve, reject) => {
@@ -70,7 +90,7 @@ export default class CustomActions extends React.Component {
             return this.imagePicker();
           case 1:
             console.log('user wants to take a photo');
-            return;
+            return this.takePhoto();
           case 2:
             console.log('user wants to get their location');
           default:
