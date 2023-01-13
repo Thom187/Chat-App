@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connectActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -50,6 +51,28 @@ export default class CustomActions extends React.Component {
     }
   };
 
+  // Get User's GPS location
+  getLocation = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === 'granted') {
+      const result = await Location.getCurrentPositionAsync({}).catch((error) =>
+        console.log(error)
+      );
+
+      if (result) {
+        this.props.onSend({
+          location: {
+            latitude: result.coords.latitude,
+            longitude: result.coords.longitude,
+          },
+        });
+      }
+    }
+  };
+  catch(error) {
+    console.log(error.message);
+  }
+
   // Upload images to firebase
   uploadImageFetch = async (uri) => {
     const blob = await new Promise((resolve, reject) => {
@@ -93,6 +116,7 @@ export default class CustomActions extends React.Component {
             return this.takePhoto();
           case 2:
             console.log('user wants to get their location');
+            return this.getLocation();
           default:
         }
       },
